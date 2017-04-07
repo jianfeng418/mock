@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+	 <script type="text/javascript" src="./jquery.min.js"></script>
+	 <script type="text/javascript" src="./mock.js"></script>
+</head>
+<body>
+	<div>点击“test”，发送请求，模拟数据</div>
+<button onclick = "test()">test</button>
+<div id="showText"> </div>
+</body>
+<script>
+	Mock.mock('http://gww2.cn',{
+		'name':'@name',
+		'age|1-100':100,
+		'color':'@color'
+	});
+	function test(){
+		$.ajax({
+			url:'http://gww2.cn',
+		}).done(function(data,status,xhr){
+			console.log((data));
+			$("#showText").append("<p>"+data+"</p>");
+		})
+	}
+	Mock.mock('Event/wap/test', {/*地址任意*/
+    'result|5': [{
+        'id|+1': 1,
+        'email': '@EMAIL',
+        'name':'@name'
+    }]
+});
+
+$.ajax({
+    url: 'Event/wap/test',
+    dataType: 'json',
+    success: function(data, status, jqXHR) {
+    	var content = "";
+    	if(data !=null){
+    		for(i=0;i<data.result.length;i++){
+    			content +='<li>\
+						<span>'+data.result[i].id+'、'+data.result[i].name+'的邮箱是：'+data.result[i].email+'</span>\
+    			</li>';
+    		}
+    		$("#showText").html(content);
+    	}
+    }
+});
+	
+</script>
+
+</html>
